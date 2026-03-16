@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  # Backend service
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: test
+    container_name: backend-test
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+    command: npm test
+    networks:
+      - test-network
+
+  # Frontend service
+  frontend-test:
+    build:
+      context: ./frontEnd
+      dockerfile: Dockerfile
+      target: test
+    container_name: frontend-test
+    volumes:
+      - ./frontEnd:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=test
+    command: npm test
+    depends_on:
+      - backend-test
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

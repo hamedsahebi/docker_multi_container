@@ -1,0 +1,233 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Central orb animations */
+  @keyframes orb-expand {
+    0%, 100% {
+      r: 160;
+      opacity: 0.2;
+    }
+    50% {
+      r: 180;
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes core-pulse {
+    0%, 100% {
+      r: 120;
+      opacity: 0.6;
+    }
+    50% {
+      r: 130;
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes inner-glow {
+    0%, 100% {
+      r: 80;
+      opacity: 0.9;
+    }
+    50% {
+      r: 90;
+      opacity: 1;
+    }
+  }
+
+  /* Circuit trace glow */
+  @keyframes trace-glow {
+    0%, 100% {
+      opacity: 0.7;
+      filter: blur(3px);
+    }
+    50% {
+      opacity: 1;
+      filter: blur(5px);
+    }
+  }
+
+  @keyframes trace-glow-delayed {
+    0%, 100% {
+      opacity: 0.6;
+      filter: blur(2px);
+    }
+    50% {
+      opacity: 0.9;
+      filter: blur(4px);
+    }
+  }
+
+  /* Node pulsing */
+  @keyframes nodes-pulse {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+  }
+
+  /* Data flow particles - left traces */
+  @keyframes data-flow-left-1 {
+    0% {
+      cx: 50;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 450;
+      opacity: 0;
+    }
+  }
+
+  @keyframes data-flow-left-2 {
+    0% {
+      cx: 50;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 450;
+      opacity: 0;
+    }
+  }
+
+  @keyframes data-flow-left-3 {
+    0% {
+      cx: 50;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 450;
+      opacity: 0;
+    }
+  }
+
+  /* Data flow particles - right traces */
+  @keyframes data-flow-right-1 {
+    0% {
+      cx: 1150;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 750;
+      opacity: 0;
+    }
+  }
+
+  @keyframes data-flow-right-2 {
+    0% {
+      cx: 1150;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 750;
+      opacity: 0;
+    }
+  }
+
+  @keyframes data-flow-right-3 {
+    0% {
+      cx: 1150;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      cx: 750;
+      opacity: 0;
+    }
+  }
+
+  /* Apply animations */
+  .animate-orb-expand {
+    animation: orb-expand 3s ease-in-out infinite;
+  }
+
+  .animate-core-pulse {
+    animation: core-pulse 2.5s ease-in-out infinite;
+  }
+
+  .animate-inner-glow {
+    animation: inner-glow 2s ease-in-out infinite;
+  }
+
+  .animate-trace-glow {
+    animation: trace-glow 2s ease-in-out infinite;
+  }
+
+  .animate-trace-glow-delayed {
+    animation: trace-glow-delayed 2s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .animate-nodes-pulse {
+    animation: nodes-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-data-flow-left-1 {
+    animation: data-flow-left-1 4s ease-in-out infinite;
+  }
+
+  .animate-data-flow-left-2 {
+    animation: data-flow-left-2 3.5s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .animate-data-flow-left-3 {
+    animation: data-flow-left-3 4.5s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+
+  .animate-data-flow-right-1 {
+    animation: data-flow-right-1 4s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+
+  .animate-data-flow-right-2 {
+    animation: data-flow-right-2 3.5s ease-in-out infinite;
+    animation-delay: 1.5s;
+  }
+
+  .animate-data-flow-right-3 {
+    animation: data-flow-right-3 4.5s ease-in-out infinite;
+    animation-delay: 2.5s;
+  }
+}
