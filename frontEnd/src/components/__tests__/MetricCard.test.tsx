@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MetricCard } from '../MetricCard'
-import { MetricConfig } from '../../types'
+import type { MetricConfig } from '../../types'
 
 describe('MetricCard', () => {
   const mockMetric: MetricConfig = {
@@ -11,7 +11,7 @@ describe('MetricCard', () => {
     icon: '🌡️',
     color: '#ef4444',
     unit: '°C',
-    yAxisDomain: [60, 100]
+    domain: [60, 100]
   }
 
   it('should render metric information correctly', () => {

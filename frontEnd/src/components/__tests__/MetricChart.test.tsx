@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render } from '@testing-library/react'
 import { MetricChart } from '../MetricChart'
-import { MetricConfig, SensorData } from '../../types'
+import type { MetricConfig, SensorData } from '../../types'
 
 describe('MetricChart', () => {
   const mockMetric: MetricConfig = {

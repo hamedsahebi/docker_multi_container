@@ -1,4 +1,4 @@
-import { MetricConfig } from '../types'
+import type { MetricConfig } from '../types'
 
 export const metrics: MetricConfig[] = [
   { 

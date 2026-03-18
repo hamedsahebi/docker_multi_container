@@ -1,5 +1,5 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { MetricConfig, SensorData } from '../types'
+import type { MetricConfig, SensorData } from '../types'
 import { formatTime } from '../utils/formatters'
 
 interface MetricChartProps {

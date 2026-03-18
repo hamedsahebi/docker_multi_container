@@ -3,6 +3,10 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RealTimeDashboard } from '../RealTimeDashboard'
 
+// Mock environment variables
+const MOCK_API_URL = 'http://localhost:5000'
+vi.stubEnv('VITE_API_URL', MOCK_API_URL)
+
 // Mock fetch API
 global.fetch = vi.fn()
 
@@ -54,7 +58,7 @@ describe('RealTimeDashboard', () => {
       expect(screen.queryByText('Loading data...')).not.toBeInTheDocument()
     })
 
-    expect(global.fetch).toHaveBeenCalledWith('http://localhost:5000/api/metrics/temperature')
+    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
     expect(screen.getByText('Real-Time Monitor')).toBeInTheDocument()
   })
 
@@ -182,7 +186,7 @@ describe('RealTimeDashboard', () => {
     })
 
     // Verify temperature data was fetched
-    expect(global.fetch).toHaveBeenCalledWith('http://localhost:5000/api/metrics/temperature')
+    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
 
     // Click on pressure metric card
     const pressureCard = screen.getByRole('button', { name: /pressure/i })
@@ -190,7 +194,7 @@ describe('RealTimeDashboard', () => {
 
     // Wait for pressure data to load
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('http://localhost:5000/api/metrics/pressure')
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`)
     })
   })
 

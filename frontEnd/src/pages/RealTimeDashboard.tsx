@@ -3,7 +3,6 @@ import type { MetricType, SensorData } from '../types'
 import { metrics } from '../constants/metrics'
 import { MetricCard } from '../components/MetricCard'
 import { MetricChart } from '../components/MetricChart'
-import { formatTime } from '../utils/formatters'
 
 const MAX_DATA_POINTS = 30 // Keep last 30 data points visible
 
@@ -23,7 +22,7 @@ export function RealTimeDashboard() {
       setCurrentIndex(0) // Reset index
       
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+        const apiUrl = import.meta.env.VITE_API_URL || ''
         const response = await fetch(`${apiUrl}/api/metrics/${selectedMetric}`)
         if (!response.ok) throw new Error(`Failed to fetch ${selectedMetric} data`)
         const data: SensorData[] = await response.json()
@@ -176,7 +175,6 @@ export function RealTimeDashboard() {
             <MetricChart
               data={displayData}
               metric={currentMetric}
-              formatTime={formatTime}
             />
 
             <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">

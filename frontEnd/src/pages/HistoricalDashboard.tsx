@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MetricType, SensorData } from '../types'
+import type { MetricType, SensorData } from '../types'
 import { metrics } from '../constants/metrics'
 import { useSensorData } from '../hooks/useSensorData'
 import { MetricCard } from '../components/MetricCard'

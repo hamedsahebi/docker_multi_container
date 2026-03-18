@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  # Backend API service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    networks:
+      - app-network
+
+  # Frontend web service
+  frontend:
+    build:
+      context: ./frontEnd
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "3065:80"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

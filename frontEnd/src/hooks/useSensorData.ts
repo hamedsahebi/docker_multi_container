@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { SensorData, MetricType } from '../types'
+import type { SensorData, MetricType } from '../types'
 
 interface UseSensorDataReturn {
   data: SensorData[]
@@ -30,7 +30,7 @@ export const useSensorData = ({ metric, cache, setCache }: UseSensorDataProps): 
     setError(null)
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const apiUrl = import.meta.env.VITE_API_URL || ''
       const response = await fetch(`${apiUrl}/api/metrics/${metricType}`)
       const jsonData = await response.json()
       
