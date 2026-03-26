@@ -1,15 +1,25 @@
 module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  coverageDirectory: 'coverage',
+  roots: ['<rootDir>/src', '<rootDir>/__tests__'],
+  testMatch: ['**/__tests__/**/*.test.ts', '**/*.test.ts'],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
   collectCoverageFrom: [
-    '**/*.js',
+    'src/**/*.ts',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.ts',
     '!**/node_modules/**',
-    '!**/coverage/**',
-    '!jest.config.js'
   ],
-  testMatch: [
-    '**/__tests__/**/*.test.js',
-    '**/*.test.js'
-  ],
-  verbose: true
+  coverageDirectory: 'coverage',
+  verbose: true,
+  moduleFileExtensions: ['ts', 'js', 'json'],
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        esModuleInterop: true,
+      },
+    },
+  },
 };

@@ -8,9 +8,6 @@ services:
       dockerfile: Dockerfile
       target: test
     container_name: backend-test
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=test
       - PORT=3000
@@ -25,9 +22,6 @@ services:
       dockerfile: Dockerfile
       target: test
     container_name: frontend-test
-    volumes:
-      - ./frontEnd:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=test
       - VITE_API_URL=http://backend-test:3000

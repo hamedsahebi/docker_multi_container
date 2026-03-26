@@ -1,5 +1,5 @@
-const request = require('supertest');
-const app = require('../app');
+import request from 'supertest';
+import app from '../src/app';
 
 describe('Server Health', () => {
   describe('GET /health', () => {
@@ -29,13 +29,13 @@ describe('Server Health', () => {
 
   describe('Error handling', () => {
     test('should return 404 for unknown routes', async () => {
-      const response = await request(app)
+      await request(app)
         .get('/unknown-route')
         .expect(404);
     });
 
     test('should handle POST requests to health endpoint', async () => {
-      const response = await request(app)
+      await request(app)
         .post('/health')
         .expect(404);
     });
@@ -52,10 +52,10 @@ describe('Server Health', () => {
 
     test('should handle OPTIONS preflight requests', async () => {
       const response = await request(app)
-        .options('/api/metrics/temperature');
+        .options('/health')
+        .expect(204);
 
-      // CORS should handle OPTIONS requests
-      expect(response.status).toBeLessThan(500);
+      expect(response.headers).toHaveProperty('access-control-allow-origin');
     });
   });
 });

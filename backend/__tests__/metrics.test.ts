@@ -1,16 +1,28 @@
-const request = require('supertest');
-const app = require('../app');
-const fs = require('fs').promises;
-const path = require('path');
+import request from 'supertest';
+import app from '../src/app';
+import { promises as fs } from 'fs';
+import { MetricType, SensorData } from '../src/types';
+import { generateAccessToken } from '../src/utils/jwt';
+
+// Helper to generate auth token for tests
+const getAuthToken = () => {
+  return generateAccessToken({
+    userId: 'test-user-123',
+    email: 'test@example.com',
+  });
+};
 
 describe('Metrics API', () => {
   describe('GET /api/metrics/:metricType', () => {
-    const validMetrics = ['temperature', 'pressure', 'vibration', 'power'];
+    const validMetrics: MetricType[] = ['temperature', 'pressure', 'vibration', 'power'];
 
-    validMetrics.forEach(metric => {
+    validMetrics.forEach((metric: MetricType) => {
       test(`should return ${metric} data successfully`, async () => {
+        const token = getAuthToken();
+        
         const response = await request(app)
           .get(`/api/metrics/${metric}`)
+          .set('Authorization', `Bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /json/);
 
@@ -18,7 +30,7 @@ describe('Metrics API', () => {
         expect(response.body.length).toBeGreaterThan(0);
         
         // Check data structure
-        const dataPoint = response.body[0];
+        const dataPoint: SensorData = response.body[0];
         expect(dataPoint).toHaveProperty('timestamp');
         expect(dataPoint).toHaveProperty('value');
         expect(typeof dataPoint.timestamp).toBe('string');
@@ -27,8 +39,11 @@ describe('Metrics API', () => {
     });
 
     test('should return 400 for invalid metric type', async () => {
+      const token = getAuthToken();
+      
       const response = await request(app)
         .get('/api/metrics/invalid')
+        .set('Authorization', `Bearer ${token}`)
         .expect(400)
         .expect('Content-Type', /json/);
 
@@ -39,15 +54,18 @@ describe('Metrics API', () => {
     });
 
     test('should return 404 if data file does not exist', async () => {
+      const token = getAuthToken();
+      
       // Mock console.error to suppress expected error logs
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       
       // Mock fs.readFile to throw ENOENT error
       const originalReadFile = fs.readFile;
-      fs.readFile = jest.fn().mockRejectedValue({ code: 'ENOENT' });
+      (fs as any).readFile = jest.fn().mockRejectedValue({ code: 'ENOENT' });
 
       const response = await request(app)
         .get('/api/metrics/temperature')
+        .set('Authorization', `Bearer ${token}`)
         .expect(404)
         .expect('Content-Type', /json/);
 
@@ -55,15 +73,18 @@ describe('Metrics API', () => {
       expect(response.body.error).toBe('Metric data not found');
 
       // Restore original functions
-      fs.readFile = originalReadFile;
+      (fs as any).readFile = originalReadFile;
       consoleErrorSpy.mockRestore();
     });
   });
 
   describe('GET /api/metrics', () => {
     test('should return all metrics data', async () => {
+      const token = getAuthToken();
+      
       const response = await request(app)
         .get('/api/metrics')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/);
 
@@ -74,22 +95,25 @@ describe('Metrics API', () => {
       expect(response.body).toHaveProperty('power');
 
       // Check each metric has data
-      Object.values(response.body).forEach(metricData => {
+      Object.values(response.body).forEach((metricData: any) => {
         expect(metricData).toBeInstanceOf(Array);
         expect(metricData.length).toBeGreaterThan(0);
       });
     });
 
     test('should handle errors when reading all metrics', async () => {
+      const token = getAuthToken();
+      
       // Mock console.error to suppress expected error logs
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       
       // Mock fs.readFile to throw an error
       const originalReadFile = fs.readFile;
-      fs.readFile = jest.fn().mockRejectedValue(new Error('Read error'));
+      (fs as any).readFile = jest.fn().mockRejectedValue(new Error('Read error'));
 
       const response = await request(app)
         .get('/api/metrics')
+        .set('Authorization', `Bearer ${token}`)
         .expect(500)
         .expect('Content-Type', /json/);
 
@@ -97,40 +121,49 @@ describe('Metrics API', () => {
       expect(response.body.error).toBe('Failed to load metrics data');
 
       // Restore original functions
-      fs.readFile = originalReadFile;
+      (fs as any).readFile = originalReadFile;
       consoleErrorSpy.mockRestore();
     });
   });
 
   describe('Data validation', () => {
     test('temperature data should be within expected range', async () => {
+      const token = getAuthToken();
+      
       const response = await request(app)
         .get('/api/metrics/temperature')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      response.body.forEach(dataPoint => {
+      response.body.forEach((dataPoint: SensorData) => {
         expect(dataPoint.value).toBeGreaterThanOrEqual(0);
         expect(dataPoint.value).toBeLessThanOrEqual(200);
       });
     });
 
     test('pressure data should be within expected range', async () => {
+      const token = getAuthToken();
+      
       const response = await request(app)
         .get('/api/metrics/pressure')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      response.body.forEach(dataPoint => {
+      response.body.forEach((dataPoint: SensorData) => {
         expect(dataPoint.value).toBeGreaterThanOrEqual(0);
         expect(dataPoint.value).toBeLessThanOrEqual(300);
       });
     });
 
     test('timestamps should be valid ISO 8601 format', async () => {
+      const token = getAuthToken();
+      
       const response = await request(app)
         .get('/api/metrics/temperature')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      response.body.forEach(dataPoint => {
+      response.body.forEach((dataPoint: SensorData) => {
         const date = new Date(dataPoint.timestamp);
         expect(date.toString()).not.toBe('Invalid Date');
       });

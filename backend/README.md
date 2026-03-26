@@ -1,13 +1,19 @@
-# Sensor Monitoring Backend
+# Sensor Monitoring Backend (TypeScript)
 
-Node.js Express backend for the sensor monitoring dashboard application.
+A robust, type-safe Express.js backend API for monitoring sensor data, built with TypeScript.
 
-## Features
+## 🚀 Features
 
-- RESTful API for sensor metrics data
-- Support for multiple metric types: temperature, pressure, vibration, power
-- CORS enabled for frontend integration
-- JSON file-based data storage
+- **TypeScript**: Full type safety and IntelliSense support
+- **Express.js**: Fast and minimal web framework
+- **RESTful API**: Clean and intuitive API design for sensor metrics data
+- **Comprehensive Testing**: Jest with ts-jest for unit and integration tests  
+- **Docker Support**: Multi-stage Dockerfiles for development and production
+- **Health Checks**: Built-in endpoint monitoring
+- **CORS Enabled**: Cross-origin resource sharing configured
+- **Error Handling**: Centralized error handling middleware
+- **Type Definitions**: Strongly typed request/response interfaces
+- **Multiple Metric Types**: Support for temperature, pressure, vibration, and power metrics
 
 ## Installation
 
