@@ -65,7 +65,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
 
       expect(result.current.error).toBe(null)
       expect(result.current.data).toEqual(mockData.temperature)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`, { credentials: "include", headers: { "Content-Type": "application/json" } })
       expect(global.fetch).toHaveBeenCalledTimes(1)
       expect(setCache).toHaveBeenCalledWith(expect.any(Function))
     })
@@ -93,7 +93,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
 
       expect(result.current.error).toBe(null)
       expect(result.current.data).toEqual(mockData.pressure)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`, { credentials: "include", headers: { "Content-Type": "application/json" } })
     })
 
     it('should fetch vibration data from API endpoint successfully', async () => {
@@ -119,7 +119,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
 
       expect(result.current.error).toBe(null)
       expect(result.current.data).toEqual(mockData.vibration)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/vibration`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/vibration`, { credentials: "include", headers: { "Content-Type": "application/json" } })
     })
 
     it('should fetch power data from API endpoint successfully', async () => {
@@ -145,7 +145,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
 
       expect(result.current.error).toBe(null)
       expect(result.current.data).toEqual(mockData.power)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/power`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/power`, { credentials: "include", headers: { "Content-Type": "application/json" } })
     })
   })
 
@@ -176,7 +176,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
       })
 
       expect(result.current.data).toEqual(mockData.temperature)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`, { credentials: "include", headers: { "Content-Type": "application/json" } })
 
       // Change to pressure
       rerender({ metric: 'pressure' })
@@ -186,7 +186,7 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
       })
 
       expect(result.current.data).toEqual(mockData.pressure)
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`, { credentials: "include", headers: { "Content-Type": "application/json" } })
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
 
@@ -624,7 +624,15 @@ describe('useSensorData - Comprehensive API Communication Tests', () => {
           expect(result.current.loading).toBe(false)
         })
 
-        expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/${metric}`)
+        expect(global.fetch).toHaveBeenCalledWith(
+          `${MOCK_API_URL}/api/metrics/${metric}`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
       }
     })
   })

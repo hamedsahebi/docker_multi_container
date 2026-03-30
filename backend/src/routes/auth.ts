@@ -29,39 +29,55 @@ router.get('/google', passport.authenticate('google', {
  * @access  Public
  */
 router.get('/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/login?error=auth_failed',
-    session: false, // We're using JWT, not sessions
-  }),
-  (req: Request, res: Response) => {
-    try {
-      const user = req.user as any;
-
+  (req: Request, res: Response, next: any) => {
+    passport.authenticate('google', {
+      failureRedirect: '/login?error=auth_failed',
+      session: false,
+    }, (err: any, user: any, info: any) => {
+      if (err) {
+        console.error('❌ OAuth Authentication Error:');
+        console.error('Error:', err);
+        console.error('Info:', info);
+        return res.redirect(`/login?error=oauth_error&details=${encodeURIComponent(err.message)}`);
+      }
+      
       if (!user) {
+        console.error('❌ No user returned from OAuth');
         return res.redirect('/login?error=no_user');
       }
 
-      // Generate JWT tokens
-      const { accessToken, refreshToken } = generateTokenPair({
-        userId: user.id,
-        email: user.email,
+      // Manual login since we're using custom callback
+      req.logIn(user, { session: false }, (loginErr) => {
+        if (loginErr) {
+          console.error('❌ Login error:', loginErr);
+          return res.redirect('/login?error=login_failed');
+        }
+
+        try {
+          // Generate JWT tokens
+          const { accessToken, refreshToken } = generateTokenPair({
+            userId: user.id,
+            email: user.email,
+          });
+
+          // Set tokens as httpOnly cookies
+          res.cookie('accessToken', accessToken, {
+            ...COOKIE_OPTIONS,
+            maxAge: 15 * 60 * 1000, // 15 minutes
+          });
+
+          res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
+
+          // Redirect to frontend dashboard
+          const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+          console.log('✅ OAuth success, redirecting to:', `${frontendUrl}/dashboard`);
+          return res.redirect(`${frontendUrl}/dashboard?auth=success`);
+        } catch (error) {
+          console.error('❌ Token generation error:', error);
+          return res.redirect('/login?error=server_error');
+        }
       });
-
-      // Set tokens as httpOnly cookies
-      res.cookie('accessToken', accessToken, {
-        ...COOKIE_OPTIONS,
-        maxAge: 15 * 60 * 1000, // 15 minutes
-      });
-
-      res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
-
-      // Redirect to frontend dashboard
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-      return res.redirect(`${frontendUrl}/dashboard?auth=success`);
-    } catch (error) {
-      console.error('OAuth callback error:', error);
-      return res.redirect('/login?error=server_error');
-    }
+    })(req, res, next);
   }
 );
 

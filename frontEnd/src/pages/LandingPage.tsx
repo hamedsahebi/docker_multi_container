@@ -1,6 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 export function LandingPage() {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+
   const features = [
     {
       icon: '📊',
@@ -189,6 +193,25 @@ export function LandingPage() {
 
       {/* Hero Section */}
       <div className="container mx-auto px-6 py-16 relative z-10">
+        {/* Top Right Auth Button */}
+        <div className="absolute top-6 right-6">
+          {isAuthenticated ? (
+            <button
+              onClick={() => navigate('/realtime')}
+              className="px-6 py-2.5 bg-gray-500 hover:bg-gray-800 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-cyan-400/50 hover:border-cyan-400 transition-all shadow-lg hover:shadow-cyan-500/30"
+            >
+              Go to Dashboard →
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="px-6 py-2.5 bg-gray-500 hover:bg-gray-800 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-cyan-400/50 hover:border-cyan-400 transition-all shadow-lg hover:shadow-cyan-500/30"
+            >
+              Sign In
+            </button>
+          )}
+        </div>
+
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
             <span className="text-6xl">🏭</span>

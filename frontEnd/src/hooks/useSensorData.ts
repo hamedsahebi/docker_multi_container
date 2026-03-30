@@ -31,7 +31,17 @@ export const useSensorData = ({ metric, cache, setCache }: UseSensorDataProps): 
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || ''
-      const response = await fetch(`${apiUrl}/api/metrics/${metricType}`)
+      const response = await fetch(`${apiUrl}/api/metrics/${metricType}`, {
+        credentials: 'include', // Send cookies for authentication
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const jsonData = await response.json()
       
       // Cache the fetched data
