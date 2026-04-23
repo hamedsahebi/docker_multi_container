@@ -11,9 +11,15 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
+backend/.env.*
+frontEnd/.env
+frontEnd/.env.*
 
 # Build outputs
 dist/

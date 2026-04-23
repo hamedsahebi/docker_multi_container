@@ -71,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = () => {
     // Redirect to backend Google OAuth
-    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3065';
     window.location.href = `${backendUrl}/auth/google`;
   };
 

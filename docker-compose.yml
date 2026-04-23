@@ -8,18 +8,13 @@ services:
       dockerfile: Dockerfile.prod
     container_name: backend
     restart: unless-stopped
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - FRONTEND_URL=http://localhost:3065
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL:-http://localhost:3000/auth/google/callback}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
-      - SESSION_SECRET=${SESSION_SECRET}
-    ports:
-      - "3000:3000"
+    # Backend should not be exposed directly in production - access via nginx reverse proxy
+    
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s

@@ -23,7 +23,12 @@ export function RealTimeDashboard() {
       
       try {
         const apiUrl = import.meta.env.VITE_API_URL || ''
-        const response = await fetch(`${apiUrl}/api/metrics/${selectedMetric}`)
+        const response = await fetch(`${apiUrl}/api/metrics/${selectedMetric}`, {
+          credentials: 'include', // Send cookies for authentication
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         if (!response.ok) throw new Error(`Failed to fetch ${selectedMetric} data`)
         const data: SensorData[] = await response.json()
         setFullData(data)

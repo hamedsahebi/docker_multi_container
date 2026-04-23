@@ -7,11 +7,13 @@ import * as userService from '../services/userService';
 const router = Router();
 
 // Cookie options
+const isDevelopment = process.env.NODE_ENV === 'development';
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+  secure: process.env.NODE_ENV === 'production',
   sameSite: 'lax' as const,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  ...(isDevelopment && { domain: 'localhost' }), // Share cookies across localhost ports in dev
 };
 
 /**
@@ -69,7 +71,7 @@ router.get('/google/callback',
           res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS);
 
           // Redirect to frontend dashboard
-          const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+          const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3065';
           console.log('✅ OAuth success, redirecting to:', `${frontendUrl}/dashboard`);
           return res.redirect(`${frontendUrl}/dashboard?auth=success`);
         } catch (error) {
