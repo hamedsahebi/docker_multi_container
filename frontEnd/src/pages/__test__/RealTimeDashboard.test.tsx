@@ -58,7 +58,12 @@ describe('RealTimeDashboard', () => {
       expect(screen.queryByText('Loading data...')).not.toBeInTheDocument()
     })
 
-    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
+    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
     expect(screen.getByText('Real-Time Monitor')).toBeInTheDocument()
   })
 
@@ -186,7 +191,12 @@ describe('RealTimeDashboard', () => {
     })
 
     // Verify temperature data was fetched
-    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`)
+    expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/temperature`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
     // Click on pressure metric card
     const pressureCard = screen.getByRole('button', { name: /pressure/i })
@@ -194,7 +204,12 @@ describe('RealTimeDashboard', () => {
 
     // Wait for pressure data to load
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`)
+      expect(global.fetch).toHaveBeenCalledWith(`${MOCK_API_URL}/api/metrics/pressure`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
     })
   })
 

@@ -21,6 +21,7 @@ interface AuthContextType {
   refreshAuth: () => Promise<void>;
 }
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
