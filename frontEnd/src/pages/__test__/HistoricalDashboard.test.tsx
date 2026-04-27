@@ -123,9 +123,9 @@ describe('HistoricalDashboard', () => {
       })
 
       const temperatureCard = screen.getByRole('button', { name: /temperature/i })
-      // Active cards have a specific class or attribute - we check it's in the document
-      expect(temperatureCard).toBeInTheDocument()
-    })
+      // Check that temperature card has the active styling
+      expect(temperatureCard).toHaveClass('bg-blue-50') // or whatever active class is used
+        })
 
     it('should display current value for selected metric', async () => {
       ;(global.fetch as any).mockResolvedValueOnce({
