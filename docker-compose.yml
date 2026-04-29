@@ -1,6 +1,27 @@
 version: '3.4'
 
 services:
+  # MongoDB database service
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-prod
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=sensor_monitoring
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    networks:
+      - app-network
+
   # Backend API service
   backend:
     build:
@@ -13,6 +34,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - MONGODB_URI=mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD}@mongodb:27017/sensor_monitoring?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
     # Backend should not be exposed directly in production - access via nginx reverse proxy
     
     healthcheck:
@@ -43,6 +68,10 @@ services:
       retries: 3
     networks:
       - app-network
+
+volumes:
+  mongodb_data:
+  mongodb_config:
 
 networks:
   app-network:

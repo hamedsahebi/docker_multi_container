@@ -8,8 +8,7 @@ import {
 import * as userService from '../src/services/userService';
 import request from 'supertest';
 import app from '../src/app';
-import fs from 'fs/promises';
-import path from 'path';
+import { connectTestDB, closeTestDB, clearTestDB } from '../src/utils/testDb';
 
 describe('JWT Utilities', () => {
   const mockPayload = {
@@ -88,21 +87,18 @@ describe('JWT Utilities', () => {
 });
 
 describe('User Service', () => {
-  const USERS_FILE = path.join(__dirname, '../data/users.json');
-
-  beforeEach(async () => {
-    // Clear users file before each test
-    await fs.mkdir(path.dirname(USERS_FILE), { recursive: true });
-    await fs.writeFile(USERS_FILE, JSON.stringify([], null, 2));
+  // Setup test database
+  beforeAll(async () => {
+    await connectTestDB();
   });
 
   afterAll(async () => {
-    // Clean up after tests
-    try {
-      await fs.unlink(USERS_FILE);
-    } catch {
-      // File may not exist
-    }
+    await closeTestDB();
+  });
+
+  beforeEach(async () => {
+    // Clear all data before each test
+    await clearTestDB();
   });
 
   describe('createUser', () => {

@@ -1,6 +1,25 @@
 version: '3.4'
 
 services:
+  # MongoDB test database service
+  mongodb-test:
+    image: mongo:7.0
+    container_name: mongodb-test
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=testpassword123
+      - MONGO_INITDB_DATABASE=sensor_monitoring_test
+    tmpfs:
+      - /data/db  # Use tmpfs for faster test execution
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - test-network
+
   # Backend service
   backend-test:
     build:
@@ -11,7 +30,11 @@ services:
     environment:
       - NODE_ENV=test
       - PORT=3000
+      - MONGODB_URI=mongodb://admin:testpassword123@mongodb-test:27017/sensor_monitoring_test?authSource=admin
     command: npm test
+    depends_on:
+      mongodb-test:
+        condition: service_healthy
     networks:
       - test-network
 

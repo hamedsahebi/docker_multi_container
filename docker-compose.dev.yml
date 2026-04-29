@@ -1,6 +1,29 @@
 version: '3.4'
 
 services:
+  # MongoDB database service
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-dev
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=devpassword123
+      - MONGO_INITDB_DATABASE=sensor_monitoring_dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - dev-network
+
   # Backend API service with hot-reloading
   backend:
     build:
@@ -14,8 +37,12 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
+      - MONGODB_URI=mongodb://admin:devpassword123@mongodb:27017/sensor_monitoring_dev?authSource=admin
     ports:
       - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
     volumes:
       # Mount source code for hot-reloading
       - ./backend/src:/app/src:ro
@@ -71,6 +98,8 @@ services:
 volumes:
   backend_node_modules:
   frontend_node_modules:
+  mongodb_data:
+  mongodb_config:
 
 networks:
   dev-network:
