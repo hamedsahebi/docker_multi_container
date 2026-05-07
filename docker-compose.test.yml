@@ -5,6 +5,7 @@ services:
   mongodb-test:
     image: mongo:7.0
     container_name: mongodb-test
+    restart: "no"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=testpassword123

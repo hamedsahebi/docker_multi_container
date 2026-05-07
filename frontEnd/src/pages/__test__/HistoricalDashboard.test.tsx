@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor, act } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { HistoricalDashboard } from '../HistoricalDashboard'
 
@@ -419,7 +419,7 @@ describe('HistoricalDashboard', () => {
         json: async () => mockTemperatureData,
       })
 
-      const { container } = render(<HistoricalDashboard />)
+      render(<HistoricalDashboard />)
 
       await waitFor(() => {
         expect(screen.queryByText('Loading sensor data...')).not.toBeInTheDocument()

@@ -294,7 +294,7 @@ describe('LoginPage', () => {
     })
 
     it('should have proper text color classes', async () => {
-      const { container } = renderWithProviders(<LoginPage />)
+      renderWithProviders(<LoginPage />)
 
       await waitFor(() => {
         const title = screen.getByRole('heading', { name: /industrial monitoring system/i })
