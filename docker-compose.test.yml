@@ -50,8 +50,6 @@ services:
       - NODE_ENV=test
       - VITE_API_URL=http://backend-test:3000
     command: npm run test:ci
-    depends_on:
-      - backend-test
     networks:
       - test-network
 
