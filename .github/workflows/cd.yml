@@ -2,13 +2,11 @@ name: CD - Build & Deploy to Azure
 
 on:
   push:
-    branches: [main]
-    # Remove the path filter below when ready to deploy
-    paths-ignore:
-      - '**'  # Temporarily disabled until Azure is configured
+    branches: [master]
+
 
 env:
-  ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}        # e.g. myapp.azurecr.io
+  ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
   BACKEND_IMAGE: ${{ secrets.ACR_REGISTRY }}/backend
   FRONTEND_IMAGE: ${{ secrets.ACR_REGISTRY }}/frontend
 
@@ -74,7 +72,7 @@ jobs:
             cd /opt/app
 
             # Pull latest compose file
-            git pull origin main
+            git pull origin master
 
             # Log in to ACR
             echo "${{ secrets.ACR_PASSWORD }}" | \
